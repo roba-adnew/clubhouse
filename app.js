@@ -7,6 +7,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const User = require('./models/user')
 const bcrypt = require('bcryptjs')
 const indexRouter = require('./routes/index')
+const userRouter = require('./routes/user')
 require('dotenv').config();
 
 var app = express();
@@ -92,6 +93,7 @@ app.use((req, res, next) => {
 });
 
 // Routers for views 
+app.use('/user', userRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
