@@ -69,3 +69,11 @@ exports.loginPost = passport.authenticate("local", {
     successRedirect: "/",
     failureRedirect: "/login"
 })
+
+exports.logoutGet = asyncHandler(async (req, res, next) => {
+    const renderConfig = {
+        page: 'logout',
+        title: 'Log Out'
+    }
+    res.render('layout', renderConfig)
+})

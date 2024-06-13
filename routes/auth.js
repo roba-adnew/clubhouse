@@ -47,4 +47,6 @@ passport.deserializeUser(async (id, done) => {
 
 router.post('/login', accountController.loginPost);
 
+router.get('/log-out', accountController.logoutGet);
+
 module.exports = router;
