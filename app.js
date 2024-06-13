@@ -3,11 +3,10 @@ var express = require('express');
 var path = require('path');
 const session = require("express-session");
 const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
 const User = require('./models/user')
 const bcrypt = require('bcryptjs')
 const indexRouter = require('./routes/index')
-const userRouter = require('./routes/users')
+const authRouter = require('./routes/auth')
 require('dotenv').config();
 
 var app = express();
@@ -37,38 +36,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// passport set-up
-passport.use(
-  new LocalStrategy(async (username, password, done) => {
-    try {
-      const user = await User.findOne({ username: username });
-      if (!user) {
-        return done(null, false, { message: "Incorrect username" });
-      };
-      const match = await bcrypt.compare(password, user.password);
-      if (!match) {
-        return done(null, false, { message: "Incorrect password" });
-      };
-      return done(null, user);
-    } catch (err) {
-      return done(err);
-    };
-  })
-);
 
-
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err);
-  };
-});
 
 app.post(
   "/users/login",
@@ -93,7 +61,7 @@ app.use((req, res, next) => {
 });
 
 // Routers for views 
-app.use('/user', userRouter);
+app.use('/user', authRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler

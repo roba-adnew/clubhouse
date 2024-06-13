@@ -1,5 +1,6 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
+const passport = require('passport');
 const User = require('../models/user');
 
 exports.accountCreateGet = asyncHandler(async (req, res, next) => {
@@ -36,16 +37,15 @@ exports.accountCreatePost = asyncHandler(async (req, res, next) => {
     })
 })
 
-// exports.loginGet = asyncHandler(async (req, res, next) => {
-//     const renderConfig = {
-//         page: 'loginForm',
-//         title: 'Log-In',
-//         user: req.user
-//     }
-//     res.render('layout', renderConfig)
-// })
+exports.loginGet = asyncHandler(async (req, res, next) => {
+    const renderConfig = {
+        page: 'login',
+        title: 'Log In',
+    }
+    res.render('layout', renderConfig)
+})
 
-// exports.loginPost = passport.authenticate("local", {
-//     successRedirect: "/",
-//     failureRedirect: "/login"
-//   })
+exports.loginPost = passport.authenticate("local", {
+    successRedirect: "/",
+    failureRedirect: "/login"
+  })
