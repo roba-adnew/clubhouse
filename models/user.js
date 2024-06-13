@@ -4,11 +4,10 @@ const { Schema } = mongoose;
 const UserSchema = new Schema({
     username: { type: String, required: true},
     hashedPassword: { type: String, required: true},
-    start: { type: Number, required: true},
+    start: { type: Number, required: true}, // ms
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
     status: { type: String, required: true }
-
 })
 
 UserSchema.virtual("fullName").get(function() {

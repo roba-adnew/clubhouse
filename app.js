@@ -7,7 +7,7 @@ const LocalStrategy = require("passport-local").Strategy;
 const User = require('./models/user')
 const bcrypt = require('bcryptjs')
 const indexRouter = require('./routes/index')
-const userRouter = require('./routes/user')
+const userRouter = require('./routes/users')
 require('dotenv').config();
 
 var app = express();
