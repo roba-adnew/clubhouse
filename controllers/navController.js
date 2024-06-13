@@ -7,7 +7,8 @@ exports.dynamicHandler = asyncHandler(async (req, res) => {
         case '/':
             renderConfig = {
                 title: 'da clubhouse',
-                page: 'index'
+                page: 'index',
+                user: res.locals.currentUser
             };
             break;
         

@@ -22,15 +22,18 @@
                         <a href="/">Home</a>
                     </li>
                     <hr>
+                        <% if (user) { %> 
                         <li>
                             <a href="/user/log-out">Log-out</a>
                         </li>
+                        <% } else { %> 
                         <li>
                             <a href="/user/login">Log-in</a>
                         </li>
                         <li>
                             <a href="/user/sign-up">Create an account</a>
                         </li>
+                        <% } %> 
                     <hr>
                 </ul>
             </div>

@@ -49,4 +49,7 @@ router.post('/login', accountController.loginPost);
 
 router.get('/log-out', accountController.logoutGet);
 
+router.post('/log-out', accountController.logoutPost);
+
+
 module.exports = router;

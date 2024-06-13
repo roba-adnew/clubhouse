@@ -9,7 +9,8 @@ exports.accountCreateGet = asyncHandler(async (req, res, next) => {
     const renderConfig = {
         title: 'Create an account',
         page: 'signUp',
-        passwordsFailMatch: false
+        passwordsFailMatch: false,
+        user: req.user
     }
     res.render('layout', renderConfig)
 })
@@ -25,7 +26,8 @@ exports.accountCreatePost = [
             const renderConfig = {
                 title: 'Create an account',
                 page: 'signUp',
-                passwordsFailMatch: true
+                passwordsFailMatch: true,
+                user: req.user
             }
 
             console.log('dont match');
@@ -61,6 +63,7 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
     const renderConfig = {
         page: 'login',
         title: 'Log In',
+        user: req.user
     }
     res.render('layout', renderConfig)
 })
@@ -73,7 +76,19 @@ exports.loginPost = passport.authenticate("local", {
 exports.logoutGet = asyncHandler(async (req, res, next) => {
     const renderConfig = {
         page: 'logout',
-        title: 'Log Out'
+        title: 'Log Out',
+        user: req.user
     }
     res.render('layout', renderConfig)
+})
+
+exports.logoutPost = asyncHandler(async (req, res, next) => {
+    req.logout((error) => {
+        if (error) {
+            console.log('oops, couldnt log out')
+            return next(error)
+        }
+        console.log('ok ok, youre out');
+        res.redirect('/')
+    })
 })
