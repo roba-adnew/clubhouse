@@ -12,9 +12,16 @@
         <label for="username">what username would you like?</label>
         <input name="username" placeholder="HIM or HER or THEM">
     </section>
+    <% if (passwordsFailMatch) { %>
+    <p>dem password dont match</p>
+    <% } %>
     <section>
         <label for="password">password</label>
         <input name="password" type="password">
+    </section>
+    <section>
+        <label for="passwordConf">password</label>
+        <input name="passwordConf" type="password">
     </section>
     <button>join the clubhouse</button>
 </form>
