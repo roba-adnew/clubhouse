@@ -1,0 +1,10 @@
+<% if (!theyKnow) { %> 
+<h4>ok, almost there, but whats the secret password</h4>
+<form action="/user/secret-password" method="POST">
+    <label for="secret">WHAT IS IT?!</label>
+    <input name="secret" placeholder="iykyk">
+    <button>there, you happy?</button>
+</form>
+<% } else { %> 
+<h3>ohh you do you know? well then, the most welcomest welcome for you</h3>
+<% } %> 

@@ -10,7 +10,7 @@ exports.accountCreateGet = asyncHandler(async (req, res, next) => {
         title: 'Create an account',
         page: 'signUp',
         passwordsFailMatch: false,
-        user: req.user
+        user: res.locals.currentUser
     }
     res.render('layout', renderConfig)
 })
@@ -27,7 +27,7 @@ exports.accountCreatePost = [
                 title: 'Create an account',
                 page: 'signUp',
                 passwordsFailMatch: true,
-                user: req.user
+                user: res.locals.currentUser
             }
 
             console.log('dont match');
@@ -47,9 +47,9 @@ exports.accountCreatePost = [
                     start: Date.now(), // ms
                     firstName: req.body.firstName,
                     lastName: req.body.lastName,
-                    status: "new"
+                    status: "uninitiated"
                 });
-                const result = await user.save();
+                const result = await user.save  ();
                 console.log("successful account creation")
                 res.redirect("/");
             } catch (err2) {
@@ -63,7 +63,7 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
     const renderConfig = {
         page: 'login',
         title: 'Log In',
-        user: req.user
+        user: res.locals.currentUser
     }
     res.render('layout', renderConfig)
 })
@@ -77,7 +77,7 @@ exports.logoutGet = asyncHandler(async (req, res, next) => {
     const renderConfig = {
         page: 'logout',
         title: 'Log Out',
-        user: req.user
+        user: res.locals.currentUser
     }
     res.render('layout', renderConfig)
 })
@@ -92,3 +92,40 @@ exports.logoutPost = asyncHandler(async (req, res, next) => {
         res.redirect('/')
     })
 })
+
+exports.passcodeGet = asyncHandler(async (req, res, next) => {
+    const renderConfig = {
+        title: 'Secret Password',
+        page: 'memberAccess',
+        user: res.locals.currentUser,
+        theyKnow: false
+    }
+    res.render('layout', renderConfig)
+})
+
+exports.passcodePost = [
+    body('secret').custom(value => {
+        return value === 'chinchilla'
+    }),
+    asyncHandler(async (req, res) => {
+        const errors  = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            const renderConfig = {
+                title: 'Secret Password',
+                page: 'memberAccess',
+                user: res.locals.currentUser,
+                theyKnow: false
+            }
+            res.render('layout', renderConfig)
+            return
+        }
+        const renderConfig = {
+            title: 'Secret Password',
+            page: 'memberAccess',
+            user: res.locals.currentUser,
+            theyKnow: true
+        }
+        res.render('layout', renderConfig);
+    })
+]

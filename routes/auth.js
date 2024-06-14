@@ -45,11 +45,19 @@ passport.deserializeUser(async (id, done) => {
     };
 });
 
+router.use((req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+})
+
 router.post('/login', accountController.loginPost);
 
 router.get('/log-out', accountController.logoutGet);
 
 router.post('/log-out', accountController.logoutPost);
 
+router.get('/secret-password', accountController.passcodeGet);
+
+router.post('/secret-password', accountController.passcodePost);
 
 module.exports = router;
