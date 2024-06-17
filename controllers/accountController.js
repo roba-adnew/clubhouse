@@ -17,8 +17,27 @@ exports.accountCreateGet = asyncHandler(async (req, res, next) => {
 })
 
 exports.accountCreatePost = [
-    body('passwordConf').custom((value,{ req }) => {
-        return value === req.body.password
+    body('passwordConf').custom((value, { req }) => {
+        if (value === req.body.password) return;
+        console.log('passwords dont match');
+        return;
+
+    }),
+    body('username').custom(async value => {
+        const user = await User.findOne({ username: req.body.username });
+        if (user) {
+            const renderConfig = {
+                title: 'Create an account',
+                page: 'signUp',
+                passwordsFailMatch: true,
+                userExists: true,
+                user: res.locals.currentUser,
+            }
+            console.log('user already exists');
+            res.render('layout', renderConfig);
+            return
+        }
+
     }),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
@@ -32,24 +51,9 @@ exports.accountCreatePost = [
                 user: res.locals.currentUser
             }
 
-            console.log('issue at password confirmation');
             res.render('layout', renderConfig);
             return
         }
-
-        const user = await User.findOne({ username: req.body.username });
-        if (user) {
-            const renderConfig = {
-                title: 'Create an account',
-                page: 'signUp',
-                passwordsFailMatch: true,
-                userExists: true,
-                user: res.locals.currentUser,
-            }
-            console.log('user already exists');
-            res.render('layout', renderConfig);
-            return
-        };
 
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             if (err) {
@@ -137,12 +141,24 @@ exports.passcodePost = [
             res.render('layout', renderConfig)
             return
         }
-        const renderConfig = {
-            title: 'Secret Password',
-            page: 'memberAccess',
-            user: res.locals.currentUser,
-            theyKnow: true
+        try {
+            const userFilter =  { username: res.locals.currentUser.username };
+            const updateMembership = {$set: {status: "initiated"}}
+            const result = await User.updateOne(userFilter, updateMembership)
+            if (result.modifiedCount === 1) {
+                console.log('theyve been initiated');
+            }
+            
+            const renderConfig = {
+                title: 'Secret Password',
+                page: 'memberAccess',
+                user: res.locals.currentUser,
+                theyKnow: true
+            }
+            res.render('layout', renderConfig);
         }
-        res.render('layout', renderConfig);
+        catch(error) {
+            console.log(`We had an error: ${error}`)
+        }
     })
 ]
