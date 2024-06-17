@@ -8,6 +8,9 @@
         <label for="lastName">last name</label>
         <input name="lastName" placeholder="...">
     </section>
+    <% if (userExists) { %>
+        <p>sorry, that username been claimed</p>
+        <% } %>
     <section>
         <label for="username">what username would you like?</label>
         <input name="username" placeholder="HIM or HER or THEM">
@@ -17,7 +20,7 @@
     <% } %>
     <section>
         <label for="password">password</label>
-        <input name="password" type="password">
+        <input name="password" id="password" type="password">
     </section>
     <section>
         <label for="passwordConf">password</label>
