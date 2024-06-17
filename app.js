@@ -3,10 +3,9 @@ var express = require('express');
 var path = require('path');
 const session = require("express-session");
 const passport = require("passport");
-const User = require('./models/user')
-const bcrypt = require('bcryptjs')
 const indexRouter = require('./routes/index')
 const authRouter = require('./routes/auth')
+const postRouter = require('./routes/post')
 require('dotenv').config();
 
 var app = express();
@@ -42,6 +41,7 @@ app.use((req, res, next) => {
 
 // Routers for views 
 app.use('/user', authRouter);
+app.use('/post', postRouter);
 app.use('/', indexRouter);
 
 // catch 404 and forward to error handler
