@@ -13,13 +13,12 @@ exports.postDraftGet = asyncHandler(async (req, res, next) => {
 
 exports.postDraftPost = asyncHandler(async (req, res, next) => {
     try {
-        const content = {
+        const post = new Post({
             title: req.body.title,
             ts: Date.now(), // ms
             message: req.body.post,
-            user: res.locals.currentUser._id
-        }
-        const post = new Post(content);
+            user: res.locals.currentUser.id
+        })
         const result = await post.save();
 
         const renderConfig = {
