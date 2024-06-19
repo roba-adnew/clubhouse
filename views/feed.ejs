@@ -1,0 +1,17 @@
+<h1><%= title %></h1>
+<% if (feed) {%>
+    <ul>
+        <% for (let post of feed) { %>
+            <table>
+                <tr>
+                    <td><%= post.title %></td>
+                </tr>
+                <tr>
+                    <td><%= post.message %></td>
+                </tr>
+            </table>
+            <% }%>
+    </ul>
+<% } else {%>
+    <p>clubhouse is quiet right now </p>
+    <% }%>

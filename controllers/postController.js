@@ -32,3 +32,19 @@ exports.postDraftPost = asyncHandler(async (req, res, next) => {
         throw error;
     }
 })
+
+exports.feedGet = asyncHandler(async (req, res, next) => {
+   
+    const feed = await Post
+        .find({}, "title user ts message")
+        .sort({ ts: 1 })
+        .exec();
+    
+    const renderConfig = {
+        title: 'the clubhouse',
+        page: 'feed',
+        feed: feed,
+        user: res.locals.currentUser
+    }
+    res.render('layout', renderConfig)
+})

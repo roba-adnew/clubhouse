@@ -6,4 +6,6 @@ router.get('/draft', postController.postDraftGet);
 
 router.post('/draft', postController.postDraftPost);
 
+router.get('/feed', postController.feedGet);
+
 module.exports = router;
