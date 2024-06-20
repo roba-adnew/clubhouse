@@ -2,16 +2,15 @@
 <% if (feed) {%>
     <ul>
         <% for (let post of feed) { %>
-            <table>
-                <tr>
-                    <td><%= post.title %></td>
-                </tr>
-                <tr>
-                    <td><%= post.message %></td>
-                </tr>
-            </table>
+            <div className="post-card">
+                <h2 classname="title"><%= post.title %></h2>
+                <p className="username"><%= post.user.username %></p>
+                <p className="date"><%= new Date(post.ts).toLocaleDateString() %></p>
+                <p className="message"><%= post.message %></p>
+            </div>
             <% }%>
     </ul>
 <% } else {%>
     <p>clubhouse is quiet right now </p>
     <% }%>
+

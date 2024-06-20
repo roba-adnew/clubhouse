@@ -34,11 +34,13 @@ exports.postDraftPost = asyncHandler(async (req, res, next) => {
 })
 
 exports.feedGet = asyncHandler(async (req, res, next) => {
-   
     const feed = await Post
         .find({}, "title user ts message")
+        .populate('user')
         .sort({ ts: 1 })
         .exec();
+    
+    console.log(feed[0])
     
     const renderConfig = {
         title: 'the clubhouse',
