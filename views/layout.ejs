@@ -22,14 +22,20 @@
                     <li>
                         <a href="/">Home</a>
                     </li>
-                    <hr>
                         <% if (user) { %> 
                             <% if (user.status !== 'initiated') { %> 
+                                 <hr>
                                 <li>
                                     <a href="/user/secret-password">Secret password</a>
                                 </li>
-                                <hr>
                             <% }  %> 
+                            <% if (!user.admin) { %> 
+                                <hr>
+                                <li>
+                                    <a href="/user/admin-password">SECRET Secret password</a>
+                                </li>
+                            <% }  %> 
+                            <hr>
                             <li>
                                 <a href="/user/log-out">Log-out</a>
                             </li>
@@ -43,6 +49,7 @@
                             </li>
 
                         <% } else { %> 
+                        <hr>   
                         <li>
                             <a href="/user/login">Log-in</a>
                         </li>

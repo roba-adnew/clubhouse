@@ -1,0 +1,10 @@
+<% if (!admin) { %> 
+    <h4>if you want power, just let me know the secret to power</h4>
+    <form action="/user/admin-password" method="POST">
+        <label for="admin">WHAT IS IT?!</label>
+        <input name="admin" placeholder="iykyk">
+        <button>give me the infinity stones</button>
+    </form>
+    <% } else { %> 
+    <h3>power has been bestowed upon though</h3>
+    <% } %> 

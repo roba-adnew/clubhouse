@@ -7,7 +7,8 @@ const UserSchema = new Schema({
     start: { type: Number, required: true}, // ms
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
-    status: { type: String, required: true }
+    status: { type: String, required: true },
+    admin: { type: Boolean, required: false }
 })
 
 UserSchema.virtual("fullName").get(function() {

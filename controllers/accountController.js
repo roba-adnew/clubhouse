@@ -5,7 +5,6 @@ const { body, validationResult } = require('express-validator');
 const User = require('../models/user');
 
 exports.accountCreateGet = asyncHandler(async (req, res, next) => {
-    console.log('page is loading at least')
     const renderConfig = {
         title: 'Create an account',
         page: 'signUp',
@@ -18,7 +17,6 @@ exports.accountCreateGet = asyncHandler(async (req, res, next) => {
 
 exports.accountCreatePost = [
     body('passwordConf').custom((value, { req }) => {
-        console.log(`${value},${req.body.password}`);
         if (value !== req.body.password) {
             console.log('passwords dont match');
             throw new Error('passwords dont match')
@@ -38,8 +36,6 @@ exports.accountCreatePost = [
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
-            errors.array().forEach(error => console.log(error));
-            
             const renderConfig = {
                 title: 'Create an account',
                 page: 'signUp',
@@ -155,6 +151,58 @@ exports.passcodePost = [
         }
         catch(error) {
             console.log(`We had an error: ${error}`)
+            throw error
+        }
+    })
+]
+
+exports.adminGet = asyncHandler(async (req, res, next) => {
+    const renderConfig = {
+        title: 'SECRET Secret Password',
+        page: 'adminAccess',
+        user: res.locals.currentUser,
+        admin: false
+    }
+    res.render('layout', renderConfig)
+})
+
+exports.adminPost = [
+    body('admin').custom(value => {
+        return value === 'simsimma'
+    }),
+    asyncHandler(async (req, res) => {
+        const user = res.locals.currentUser;
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) {
+            const renderConfig = {
+                title: 'SECRET Secret Password',
+                page: 'adminAccess',
+                user: user,
+                admin: false
+            }
+            res.render('layout', renderConfig)
+            return
+        }
+        try {
+            const userFilter =  { username: user.username };
+            const updateMembership = {$set: {admin: true}}
+            const result = await User.updateOne(userFilter, updateMembership)
+            if (result.modifiedCount === 1) {
+                console.log(`they're an admin now`);
+            }
+            
+            const renderConfig = {
+                title: 'SECRET Secret Password',
+                page: 'adminAccess',
+                user: user,
+                admin: true
+            }
+            res.render('layout', renderConfig);
+        }
+        catch(error) {
+            console.log(`We had an error: ${error}`)
+            throw error
         }
     })
 ]

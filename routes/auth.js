@@ -31,7 +31,6 @@ passport.use(
     })
 );
 
-
 passport.serializeUser((user, done) => {
     done(null, user.id);
 });
@@ -59,5 +58,9 @@ router.post('/log-out', accountController.logoutPost);
 router.get('/secret-password', accountController.passcodeGet);
 
 router.post('/secret-password', accountController.passcodePost);
+
+router.get('/admin-password', accountController.adminGet);
+
+router.post('/admin-password', accountController.adminPost);
 
 module.exports = router;
