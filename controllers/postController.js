@@ -1,4 +1,5 @@
 const asyncHandler = require('express-async-handler');
+const feedUtils = require('../utils/feed');
 const { body, validationResult } = require('express-validator');
 const Post = require('../models/post');
 
@@ -34,11 +35,18 @@ exports.postDraftPost = asyncHandler(async (req, res, next) => {
 })
 
 exports.feedGet = asyncHandler(async (req, res, next) => {
-    const feed = await Post
+    const user = res.locals.currentUser;
+    
+    const rawFeed = await Post
         .find({}, "title user ts message")
         .populate('user')
         .sort({ ts: 1 })
         .exec();
+
+    const feed = user.status == 
+        "initiated" ? 
+        rawFeed : 
+        feedUtils.feedAnonymizer(rawFeed);
     
     console.log(feed[0])
     
@@ -46,7 +54,7 @@ exports.feedGet = asyncHandler(async (req, res, next) => {
         title: 'the clubhouse',
         page: 'feed',
         feed: feed,
-        user: res.locals.currentUser
+        user: user
     }
     res.render('layout', renderConfig)
 })

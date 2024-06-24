@@ -18,31 +18,28 @@ exports.accountCreateGet = asyncHandler(async (req, res, next) => {
 
 exports.accountCreatePost = [
     body('passwordConf').custom((value, { req }) => {
-        if (value === req.body.password) return;
-        console.log('passwords dont match');
-        return;
+        console.log(`${value},${req.body.password}`);
+        if (value !== req.body.password) {
+            console.log('passwords dont match');
+            throw new Error('passwords dont match')
+        }
+        return true;
 
     }),
     body('username').custom(async value => {
-        const user = await User.findOne({ username: req.body.username });
+        const user = await User.findOne({ username: value });
         if (user) {
-            const renderConfig = {
-                title: 'Create an account',
-                page: 'signUp',
-                passwordsFailMatch: true,
-                userExists: true,
-                user: res.locals.currentUser,
-            }
             console.log('user already exists');
-            res.render('layout', renderConfig);
-            return
+            throw new Error('Username already exists');
         }
-
+        return true;
     }),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) {
+            errors.array().forEach(error => console.log(error));
+            
             const renderConfig = {
                 title: 'Create an account',
                 page: 'signUp',
@@ -50,7 +47,6 @@ exports.accountCreatePost = [
                 userExists: false,
                 user: res.locals.currentUser
             }
-
             res.render('layout', renderConfig);
             return
         }
