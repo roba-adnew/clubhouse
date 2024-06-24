@@ -1,14 +1,17 @@
 <h1><%= title %></h1>
-<% if (feed) {%>
+<% if (feed) { %>
     <ul>
         <% for (let post of feed) { %>
-            <div className="post-card">
-                <h2 classname="title"><%= post.title %></h2>
+            <div className="post-card" style="border: 2px solid black;">
+                <h4 classname="title"><%= post.title %></h4>
                 <p className="username"><%= post.user.username %></p>
                 <p className="date"><%= new Date(post.ts).toLocaleDateString() %></p>
                 <p className="message"><%= post.message %></p>
+                <% if (user.admin) { %>
+                    <button>delete</button>
+                <% } %>
             </div>
-            <% }%>
+            <% } %>
     </ul>
 <% } else {%>
     <p>clubhouse is quiet right now </p>
