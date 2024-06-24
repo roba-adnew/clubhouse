@@ -43,13 +43,9 @@ exports.feedGet = asyncHandler(async (req, res, next) => {
         .sort({ ts: 1 })
         .exec();
 
-    const feed = user.status == 
-        "initiated" ? 
-        rawFeed : 
-        feedUtils.feedAnonymizer(rawFeed);
-    
-    console.log(feed[0])
-    
+    const feed = user.status === "initiated" ? 
+        rawFeed : feedUtils.feedAnonymizer(rawFeed);
+        
     const renderConfig = {
         title: 'the clubhouse',
         page: 'feed',
