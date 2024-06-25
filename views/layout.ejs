@@ -28,26 +28,26 @@
                                 <li>
                                     <a href="/user/secret-password">Secret password</a>
                                 </li>
-                            <% }  %> 
+                            <% } else { %> 
                             <% if (!user.admin) { %> 
                                 <hr>
                                 <li>
                                     <a href="/user/admin-password">SECRET Secret password</a>
                                 </li>
                             <% }  %> 
-                            <hr>
-                            <li>
-                                <a href="/user/log-out">Log-out</a>
-                            </li>
-                            <hr>
-                            <li>
-                                <a href="/post/draft">Post</a>
-                            </li>
-                            <hr>
-                            <li>
-                                <a href="/post/feed">Feed</a>
-                            </li>
-
+                        <% }  %> 
+                        <hr>
+                        <li>
+                            <a href="/user/log-out">Log-out</a>
+                        </li>
+                        <hr>
+                        <li>
+                            <a href="/post/draft">Post</a>
+                        </li>
+                        <hr>
+                        <li>
+                            <a href="/post/feed">Feed</a>
+                        </li>
                         <% } else { %> 
                         <hr>   
                         <li>

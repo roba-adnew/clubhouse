@@ -62,8 +62,12 @@ exports.accountCreatePost = [
                     status: "uninitiated"
                 });
                 const result = await user.save();
-                console.log("successful account creation")
-                res.redirect("/");
+                const renderConfig = {
+                    page: 'login',
+                    title: 'Log In',
+                    user: res.locals.currentUser
+                }
+                res.render('layout', renderConfig)
             } catch (err2) {
                 console.log("nah, this time we couldn't make the account")
                 return next(err2);
@@ -192,13 +196,7 @@ exports.adminPost = [
                 console.log(`they're an admin now`);
             }
             
-            const renderConfig = {
-                title: 'SECRET Secret Password',
-                page: 'adminAccess',
-                user: user,
-                admin: true
-            }
-            res.render('layout', renderConfig);
+            res.redirect('/');
         }
         catch(error) {
             console.log(`We had an error: ${error}`)

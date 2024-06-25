@@ -8,4 +8,6 @@ router.post('/draft', postController.postDraftPost);
 
 router.get('/feed', postController.feedGet);
 
+router.post('/:id/delete', postController.postDeletePost);
+
 module.exports = router;

@@ -8,7 +8,12 @@
                 <p className="date"><%= new Date(post.ts).toLocaleDateString() %></p>
                 <p className="message"><%= post.message %></p>
                 <% if (user.admin) { %>
-                    <button>delete</button>
+                    <form action= "/post/<%= post._id %>/delete" method="post">
+                        <div class="form-group">
+                            <!-- <input class="form-control" name="post" type="hidden" value="<%= post._id %>"/> -->
+                            <button class="btn btn-primary" type="submit">delete</button>
+                        </div>
+                    </form>
                 <% } %>
             </div>
             <% } %>
