@@ -1,6 +1,7 @@
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const LocalStrategy = require("passport-local").Strategy;
 const { body, validationResult } = require('express-validator');
 const User = require('../models/user');
 
@@ -34,22 +35,14 @@ exports.accountCreatePost = [
     }),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
-
         if (!errors.isEmpty()) {
-            const renderConfig = {
-                title: 'Create an account',
-                page: 'signUp',
-                passwordsFailMatch: true,
-                userExists: false,
-                user: res.locals.currentUser
-            }
-            res.render('layout', renderConfig);
+            res.redirect('/user/sign-up');
             return
         }
 
         bcrypt.hash(req.body.password, 10, async (err, hashedPassword) => {
             if (err) {
-                console.log("nah, you had issues at the hash")
+                console.error("nah, you had issues at the hash")
                 return next(err);
             }
             try {
@@ -62,12 +55,7 @@ exports.accountCreatePost = [
                     status: "uninitiated"
                 });
                 const result = await user.save();
-                const renderConfig = {
-                    page: 'login',
-                    title: 'Log In',
-                    user: res.locals.currentUser
-                }
-                res.render('layout', renderConfig)
+                res.redirect('/user/login')
             } catch (err2) {
                 console.log("nah, this time we couldn't make the account")
                 return next(err2);
@@ -85,8 +73,42 @@ exports.loginGet = asyncHandler(async (req, res, next) => {
     res.render('layout', renderConfig)
 })
 
+// passport set-up
+passport.use(
+    new LocalStrategy(async (username, password, done) => {
+        try {
+            const user = await User.findOne({ username: username });
+            if (!user) {
+                console.log('User not found');
+                return done(null, false, { message: "Incorrect username" });
+            };
+            const match = await bcrypt.compare(password, user.hashedPassword);
+            if (!match) {
+                console.log('Incorrect password');
+                return done(null, false, { message: "Incorrect password" });
+            };
+            return done(null, user);
+        } catch (err) {
+            return done(err, false);
+        };
+    })
+);
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findById(id);
+        done(null, user);
+    } catch (err) {
+        done(err);
+    };
+});
+
 exports.loginPost = passport.authenticate("local", {
-    successRedirect: "/",
+    successRedirect: "/post/feed",
     failureRedirect: "/login"
 })
 
@@ -115,7 +137,8 @@ exports.passcodeGet = asyncHandler(async (req, res, next) => {
         title: 'Secret Password',
         page: 'memberAccess',
         user: res.locals.currentUser,
-        theyKnow: false
+        theyKnow: false,
+        failedAttempt: false
     }
     res.render('layout', renderConfig)
 })
@@ -132,10 +155,11 @@ exports.passcodePost = [
                 title: 'Secret Password',
                 page: 'memberAccess',
                 user: res.locals.currentUser,
-                theyKnow: false
+                theyKnow: false,
+                failedAttempt: true
             }
-            res.render('layout', renderConfig)
-            return
+            res.render('layout', renderConfig);
+            return;
         }
         try {
             const userFilter =  { username: res.locals.currentUser.username };
@@ -165,7 +189,8 @@ exports.adminGet = asyncHandler(async (req, res, next) => {
         title: 'SECRET Secret Password',
         page: 'adminAccess',
         user: res.locals.currentUser,
-        admin: false
+        admin: false,
+        failedAttempt: false
     }
     res.render('layout', renderConfig)
 })
@@ -183,7 +208,8 @@ exports.adminPost = [
                 title: 'SECRET Secret Password',
                 page: 'adminAccess',
                 user: user,
-                admin: false
+                admin: false,
+                failedAttempt: true
             }
             res.render('layout', renderConfig)
             return
