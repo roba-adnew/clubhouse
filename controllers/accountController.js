@@ -35,6 +35,7 @@ exports.accountCreatePost = [
     }),
     asyncHandler(async (req, res, next) => {
         const errors = validationResult(req);
+        console.error(errors)
         if (!errors.isEmpty()) {
             res.redirect('/user/sign-up');
             return
@@ -109,7 +110,7 @@ passport.deserializeUser(async (id, done) => {
 
 exports.loginPost = passport.authenticate("local", {
     successRedirect: "/post/feed",
-    failureRedirect: "/login"
+    failureRedirect: "/user/login"
 })
 
 exports.logoutGet = asyncHandler(async (req, res, next) => {
