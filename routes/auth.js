@@ -1,10 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport');
-const bcrypt = require('bcryptjs');
-const LocalStrategy = require("passport-local").Strategy;
 const accountController = require('../controllers/accountController');
-const User = require('../models/user');
 
 router.get('/sign-up', accountController.accountCreateGet)
 
